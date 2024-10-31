@@ -1,7 +1,7 @@
 Name:       SailMines
 
 Summary:    Minesweeper clone for SFOS
-Version:    0.1
+Version:    0.2
 Release:    1
 License:    LICENSE
 URL:        http://example.org/

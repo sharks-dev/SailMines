@@ -24,7 +24,7 @@ Page {
                 id: boardSize
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
-                value: 10
+                value: gridSize
                 minimumValue: 10
                 maximumValue: 100
                 onValueChanged: editSliderBounds();
@@ -39,9 +39,9 @@ Page {
                 id: mineCount
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
-                value: 5
+                value: numMines
                 minimumValue: 1
-                maximumValue: 99
+                maximumValue: gridSize * gridSize - 1
             }
 
             Button {
@@ -51,11 +51,29 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
+            Column {
+                x: Theme.paddingLarge
+                width: parent.width - 2*x
+                spacing: Theme.paddingLarge
+                Repeater {
+                    model: [
+                        "Press a grid square to reveal it. Hold a square to flag it."
+                    ]
+                    Label {
+                        text: modelData
+                        color: palette.highlightColor
+                        wrapMode: Text.Wrap
+                        width: parent.width
+                    }
+                }
+            }
+
             LinkedLabel {
                 x: Theme.horizontalPageMargin
                 width: parent.width - 2*x
-                plainText: "Written by Ash Sharkey. Source available, GPL3: https://github.com/Doofitator/SailMines"
+                plainText: "Source available, GPL3: https://github.com/Doofitator/SailMines"
             }
+
 
 
         }
@@ -64,15 +82,16 @@ Page {
     function rebuildGrid() {
         // TODO: This doesn't work.
         // [W] unknown:65 - file:///usr/share/SailMines/qml/pages/SecondPage.qml:65: ReferenceError: gamePage is not defined
-        gamePage.gridSize = Math.round(boardSize.value);
-        gamePage.numMines = Math.round(mineCount.value);
-        gamePage.initialiseBoard();
+        gridSize = Math.round(boardSize.value);
+        numMines = Math.round(mineCount.value);
+        //gamePage.initialiseBoard();
     }
 
     function editSliderBounds() {
-        var ratio = mineCount.value/mineCount.maximumValue;
         mineCount.maximumValue = Math.round(boardSize.value) * Math.round(boardSize.value) - 1;
-        mineCount.value = ratio * mineCount.maximumValue;
+        if (mineCount.value > mineCount.maximumValue) {
+            mineCount.value = mineCount.maximumValue;
+        }
     }
 
 }

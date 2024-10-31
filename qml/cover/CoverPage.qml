@@ -2,21 +2,22 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 CoverBackground {
-    Label {
-        id: label
+    Column {
         anchors.centerIn: parent
-        text: qsTr("My Cover")
-    }
-
-    CoverActionList {
-        id: coverAction
-
-        CoverAction {
-            iconSource: "image://theme/icon-cover-next"
+        Label {
+            id: label
+            text: "SailMines"
+            anchors.horizontalCenter: parent.horizontalCenter
         }
-
-        CoverAction {
-            iconSource: "image://theme/icon-cover-pause"
+        Label {
+            text: "Field: " + gridSize + "x" + gridSize + " 🏳"
+            color: palette.highlightColor
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+        Label {
+            text: "Mines: " + numMines + " 💣"
+            color: palette.highlightColor
+            anchors.horizontalCenter: parent.horizontalCenter
         }
     }
 }

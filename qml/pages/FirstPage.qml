@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QtFeedback 5.0
 import Sailfish.Silica 1.0
 
 Page {
@@ -9,8 +10,12 @@ Page {
     property int adjacentMineCount: 0
     property int i: 0
     property int idx: 0
-    property int gridSize: 10 // Grid dimensions, e.g., 10x10
-    property int numMines: 5 // Number of mines
+
+    // controls the flag vibration
+    ThemeEffect {
+        id: keypadBuzz
+        effect: ThemeEffect.PressWeak
+    }
 
     // This timer controls the counter at the top
     // of the screen, indicating how many seconds
@@ -57,64 +62,77 @@ Page {
         }
     }
 
-    Grid {
-        id: grid
-        columns: gridSize
-        anchors.centerIn: parent
-        spacing: 2
+    Flickable {
+        id: scrollableArea
+        anchors.fill: parent
+        anchors.topMargin: 180
+        contentWidth: grid.width    // Sets the horizontal scroll limit
+        contentHeight: grid.height  // Sets the vertical scroll limit
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        clip: true                         // Clips content to keep it within viewable area
 
-        Repeater {
-            model: gridSize * gridSize
-            SilicaFlickable {
-                id: cell
-                width: 100
-                height: 120
+        Grid {
+            id: grid
+            columns: gridSize
+            anchors.centerIn: parent
+            spacing: 2
 
-                // Expose Button's text property through an alias
-                property alias buttonText: cellButton.text
-                property alias buttonEnabled: cellButton.enabled
+            Repeater {
+                model: gridSize * gridSize
+                SilicaFlickable {
+                    id: cell
+                    width: 100
+                    height: 120
 
-                // there are gridSize^2 buttons generated here,
-                // each representing a cell on the minefield.
-                Button {
-                    id: cellButton
-                    text: ""
-                    anchors.fill: parent
+                    // Expose Button's text property through an alias
+                    property alias buttonText: cellButton.text
+                    property alias buttonEnabled: cellButton.enabled
 
-                    // The following logic determines if a button
-                    // is pressed or long-pressed.
-                    MouseArea {
-                        id: mouseArea
+                    // there are gridSize^2 buttons generated here,
+                    // each representing a cell on the minefield.
+                    Button {
+                        id: cellButton
+                        text: ""
                         anchors.fill: parent
-                        onPressed: {
-                            longPressTimer.start()  // Start the timer on press
-                        }
-                        onReleased: {
-                            if (longPressTimer.running) {
-                                longPressTimer.stop()  // Stop the timer if it's running
-                                revealCell(cell, index)  // Short press action
+
+                        // The following logic determines if a button
+                        // is pressed or long-pressed.
+                        MouseArea {
+                            id: mouseArea
+                            anchors.fill: parent
+                            onPressed: {
+                                longPressTimer.start()  // Start the timer on press
+                            }
+                            onReleased: {
+                                if (longPressTimer.running) {
+                                    longPressTimer.stop()  // Stop the timer if it's running
+                                    revealCell(cell, index)  // Short press action
+                                }
+                            }
+                            onCanceled: {
+                                longPressTimer.stop()  // Stop the timer if the press is canceled
                             }
                         }
-                        onCanceled: {
-                            longPressTimer.stop()  // Stop the timer if the press is canceled
+
+                        Timer {
+                            id: longPressTimer
+                            interval: 125
+                            repeat: false
+                            onTriggered: {
+                                if (cell.buttonEnabled === true) {
+                                    flagCell(cell)  // Long press action
+                                }
+                            }
                         }
                     }
 
-                    Timer {
-                        id: longPressTimer
-                        interval: 500
-                        repeat: false
-                        onTriggered: {
-                            flagCell(cell)  // Long press action
-                        }
-                    }
+
                 }
-
-
             }
         }
-    }
 
+    }
     // when the screen is loaded,
     // start the game.
     Component.onCompleted: {
@@ -178,6 +196,7 @@ Page {
     }
 
     function flagCell(cell) {
+        keypadBuzz.play()
         if (cell.buttonText === "🏳") {
             cell.buttonText = "";
             mineCount.text = mineCount.text*1 + 1;
@@ -212,6 +231,14 @@ Page {
             // if the cell has been flagged,
             // we don't want to accidentally press it.
             return;
+        } else if (cell.buttonText !== "") {
+            // if the button has been given a value already,
+            // clicking on it should reveal its adjacent cells.
+            var indices = getAdjacentIndices(index); // continue checking all adjacent cells until we find mines.
+            for (var j = 0; j < indices.length; j++) {
+                if (grid.children[indices[j]].buttonEnabled !== false) {
+                revealCell(grid.children[indices[j]], indices[j]); }
+            }
         }
 
 
@@ -253,7 +280,8 @@ Page {
             // show all the mines
             for (i = 0; i < board.length; i++) {
                 if (board[i] === -1) {
-                    grid.children[i].buttonText = "💣";
+                    if (grid.children[i].buttonText !== "🏳") {
+                    grid.children[i].buttonText = "💣"; }
                 }
             }
 
