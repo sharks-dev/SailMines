@@ -2,7 +2,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Page {
-    id: page
+    id: gamePage
 
     property var board: []
     property int mines: 0
@@ -47,7 +47,7 @@ Page {
             id: options
             icon.source: "image://theme/icon-m-setting"
             anchors.verticalCenter: parent.verticalCenter
-            //onClicked: openSettings()
+            onClicked: pageStack.animatorPush(Qt.resolvedUrl("SecondPage.qml"))
         }
         Label {
             id: mineCount
