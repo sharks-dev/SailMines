@@ -3,13 +3,11 @@
 
 Work-in-progress. Screenshots below:
 <table>
-  <td><img src="https://i.imgur.com/iKrf3sq.png" alt="in-progress" width="200"/></td>
-  <td><img src="https://i.imgur.com/KHwBVt9.png" alt="won" width="200"/></td>
-  <td><img src="https://i.imgur.com/vDlrTDf.png" alt="lost" width="200"/></td>
+  <td><img src="https://i.imgur.com/FxBdrWc.png" alt="in-progress" width="200"/></td>
+  <td><img src="https://i.imgur.com/qF11e39.png" alt="lost" width="200"/></td>
+  <td><img src="https://i.imgur.com/OnsY7YB.png" alt="settings" width="200"/></td>
 </table>
 
 Yet to implement:
-* Options page for changing the size of the minefield and number of mines
-* Scrollable minefield (x-y)
+* Pinch-to-zoom on minefield
 * Win/loss animations
-* About page
