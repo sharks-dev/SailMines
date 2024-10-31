@@ -184,7 +184,23 @@ Page {
         } else if (cell.buttonText === "") {
             cell.buttonText = "🏳"
             mineCount.text = mineCount.text*1 - 1;
-            // TODO: Logic to check if that's the last flag we needed to win the game
+            if (mineCount.text === "0") {
+                // we know we have the right number of flags,
+                // but not sure if they're in the right places.
+                var count = 0;
+                for (i = 0; i < board.length; i++) {
+                    if (board[i] === -1) {
+                        if (grid.children[i].buttonText === "🏳") {
+                            count++
+                        }
+                    }
+                }
+                if (count === numMines) {
+                    // we know the flags were in the right spot.
+                    gameTimer.stop();
+                    Notices.show("You won!", Notice.Short, Notice.Center);
+                }
+            }
         }
     }
 
@@ -225,8 +241,10 @@ Page {
                         grid.children[i].buttonText = "🏳";
                     }
                 }
+                mineCount.text = "0";
                 // stop timer
                 gameTimer.stop();
+                Notices.show("You won!", Notice.Short, Notice.Center);
             }
 
         } else {
@@ -241,6 +259,8 @@ Page {
 
             // stop timer
             gameTimer.stop();
+
+            Notices.show("You lost!", Notice.Short, Notice.Center);
         }
     }
 

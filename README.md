@@ -11,5 +11,5 @@ Work-in-progress. Screenshots below:
 Yet to implement:
 * Options page for changing the size of the minefield and number of mines
 * Scrollable minefield (x-y)
-* Win/loss indicators or animations
+* Win/loss animations
 * About page
