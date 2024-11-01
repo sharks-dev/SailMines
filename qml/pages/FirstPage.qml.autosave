@@ -76,17 +76,11 @@ Page {
         }
     }
 
-    function updateScale(zoomIn) {
-        if (zoomIn) {
-            scrollableArea.scale = scrollableArea.scale + 0.1
-            // Update Flickable content size to allow panning when zoomed
-            scrollableArea.contentWidth = grid.width * scrollableArea.scale
-            scrollableArea.contentHeight = grid.height * scrollableArea.scale
-        }
-    }
-
-
-
+    //FIXME: The Flickable element overlaps the gameHeader when its scale is updated.
+    //       I need to sort out a way of keeping the gameHeader above the scrollableArea.
+    //       I could wrap them both in a Column{}, but then the Flickable doesn't seem to
+    //       get the inputs it needs from 
+    
     Flickable {
         id: scrollableArea
         anchors.fill: parent
@@ -350,6 +344,16 @@ Page {
 
         return indices;
     }
+
+    function updateScale(zoomIn) {
+        if (zoomIn) {
+            scrollableArea.scale = scrollableArea.scale + 0.1
+            // Update Flickable content size to allow panning when zoomed
+            scrollableArea.contentWidth = grid.width * scrollableArea.scale
+            scrollableArea.contentHeight = grid.height * scrollableArea.scale
+        }
+    }
+
 
 
 }
