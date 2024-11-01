@@ -33,13 +33,14 @@ Page {
     Column {
         id: gameHeader
         width: parent.width
-        z: -1000
+        z: 1
         Row {
             // This row contains the timer, a reset button,
             // a settings button, and the remaining count of mines.
             spacing: Theme.paddingLarge
             anchors.horizontalCenter: parent.horizontalCenter
             SecondaryButton {
+                id: zoomOutBtn
                 width: height
                 icon.source: "image://theme/icon-m-remove"
                 onClicked: updateScale(false)
@@ -69,23 +70,13 @@ Page {
                 font.family: Theme.fontFamilyHeading
             }
             SecondaryButton {
+                id: zoomInBtn
                 width: height
                 icon.source: "image://theme/icon-m-add"
                 onClicked: updateScale(true)
             }
         }
     }
-
-    function updateScale(zoomIn) {
-        if (zoomIn) {
-            scrollableArea.scale = scrollableArea.scale + 0.1
-            // Update Flickable content size to allow panning when zoomed
-            scrollableArea.contentWidth = grid.width * scrollableArea.scale
-            scrollableArea.contentHeight = grid.height * scrollableArea.scale
-        }
-    }
-
-
 
     Flickable {
         id: scrollableArea
@@ -95,7 +86,7 @@ Page {
         contentHeight: grid.height  // Sets the vertical scroll limit
         clip: true                         // Clips content to keep it within viewable area
         scale: 1.0
-        //Rectangle { width: parent.width; height: parent.height; color: white; }
+
         Grid {
             id: grid
             columns: gridSize
@@ -350,6 +341,31 @@ Page {
 
         return indices;
     }
+
+    function updateScale(zoomIn) {
+        if (zoomIn) {
+            if (grid.scale < 2.0) {
+                grid.scale = grid.scale + 0.1;
+                zoomOutBtn.enabled = true;
+                if (grid.scale >= 2.0) {
+                    zoomInBtn.enabled = false;
+                }
+            }
+        } else{
+            if (grid.scale > 0.5) {
+                grid.scale = grid.scale - 0.1;
+                zoomInBtn.enabled = true;
+                if (grid.scale <= 0.5) {
+                    zoomOutBtn.enabled = false
+                }
+            }
+        }
+
+        // Update Flickable content size to allow panning when zoomed
+        scrollableArea.contentWidth = grid.width * grid.scale
+        scrollableArea.contentHeight = grid.height * grid.scale
+    }
+
 
 
 }
