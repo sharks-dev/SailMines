@@ -11,7 +11,7 @@ ApplicationWindow {
     property int gridSize: 15 // Grid dimensions, e.g., 10x10
     property int numMines: 25 // Number of mines
 
-
+    property bool controlMode: true // tap to reveal vs. tap to flag
 
 }
 

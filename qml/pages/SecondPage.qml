@@ -12,9 +12,16 @@ Page {
         Column {
             id: column
             spacing: Theme.paddingLarge
-            width: parent.width
+            x: Theme.paddingLarge
+            width: parent.width - 2*x
             PageHeader { title: "Options" }
             // Controls for setting minefield (board) size
+            Label {
+                text: "Minefield configuration: "
+                color: palette.highlightColor
+                wrapMode: Text.Wrap
+                width: parent.width
+            }
             Row {
                 spacing: Theme.paddingLarge
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -97,28 +104,36 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
-            // Some information for the user (controls, source, etc.)
+            // Options for the game controls
             Column {
-                x: Theme.paddingLarge
-                width: parent.width - 2*x
-                spacing: Theme.paddingLarge
-                Repeater {
-                    model: [
-                        "Press a grid square to reveal it. Hold a square to flag it."
-                    ]
-                    Label {
-                        text: modelData
-                        color: palette.highlightColor
-                        wrapMode: Text.Wrap
-                        width: parent.width
-                    }
+                id: gameControls
+                width: parent.width
+                Label {
+                    text: "Controls preferences: "
+                    color: palette.highlightColor
+                    wrapMode: Text.Wrap
+                    width: parent.width
+                }
+                TextSwitch {
+                    id: controlSwitch1
+                    text: "Tap to reveal, hold to flag"
+                    checked: controlMode
+                    onClicked: changeControls()
+                }
+                TextSwitch {
+                    id: controlSwitch2
+                    text: "Tap to flag, hold to reveal"
+                    checked: !controlMode
+                    onClicked: changeControls()
                 }
             }
 
+            // Information
+
             LinkedLabel {
-                x: Theme.horizontalPageMargin
-                width: parent.width - 2*x
-                plainText: "Source available, GPL3: https://github.com/sharks-dev/SailMines"
+                plainText: "SailMines by Sharks. More information at https://github.com/sharks-dev/SailMines"
+                width: parent.width
+                wrapMode: Text.WordWrap
             }
 
 
@@ -139,6 +154,15 @@ Page {
         if (mineCount.value > mineCount.maximumValue) {
             mineCount.value = mineCount.maximumValue;
         }
+    }
+
+    function changeControls() {
+        var temp = !controlMode;
+        controlMode = temp;
+        controlSwitch1.checked = temp;
+        controlSwitch2.checked = !temp;
+
+        column.controls = temp;
     }
 
 }

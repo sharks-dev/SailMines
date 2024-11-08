@@ -17,6 +17,16 @@ Page {
         effect: ThemeEffect.PressWeak
     }
 
+    // controls the game lost vibration
+    ThemeEffect {
+        // FIXME: I wanted to use a HapticsEffect here, with a long duration.
+        //        Unfortunately, either it doesn't work on my device or it doesn't
+        //        work in SFOS in general. Even the ComponentsGallery app is broken
+        //        in this respect for me.
+        id: longBuzz
+        effect: ThemeEffect.PressStrong
+    }
+
     // This timer controls the counter at the top
     // of the screen, indicating how many seconds
     // it's taken so far for you to sweep the field.
@@ -29,10 +39,92 @@ Page {
         }
     }
 
+    Flickable {
+        id: scrollableArea
+        anchors.fill: parent
+        anchors.bottomMargin: gameFooter.height
+        // Buffer of '750' means you don't have to reach right to the edge
+        // of the screen.
+        contentWidth: grid.width + 750      // Sets the horizontal scroll limit
+        contentHeight: grid.height + 750    // Sets the vertical scroll limit
+        clip: true                          // Clips content to keep it within viewable area
+        scale: 1.0
 
-    Column {
-        id: gameHeader
+        Grid {
+            id: grid
+            columns: gridSize
+            anchors.centerIn: parent
+            spacing: 2
+
+            Repeater {
+                model: gridSize * gridSize
+                SilicaFlickable {
+                    id: cell
+                    width: 100
+                    height: 120
+
+                    // Expose Button's text property through an alias
+                    property alias buttonText: cellButton.text
+                    property alias buttonEnabled: cellButton.enabled
+
+                    // there are gridSize^2 buttons generated here,
+                    // each representing a cell on the minefield.
+                    Button {
+                        id: cellButton
+                        text: ""
+                        anchors.fill: parent
+
+                        // The following logic determines if a button
+                        // is pressed or long-pressed.
+                        MouseArea {
+                            id: mouseArea
+                            anchors.fill: parent
+                            onPressed: {
+                                longPressTimer.start()  // Start the timer on press
+                            }
+                            onReleased: {
+                                if (longPressTimer.running) {
+                                    longPressTimer.stop()  // Stop the timer if it's running
+                                    if (controlMode) { // Short press action
+                                        revealCell(cell, index)
+                                    } else {
+                                        flagCell(cell, index)
+                                    }
+                                }
+                            }
+                            onCanceled: {
+                                longPressTimer.stop()  // Stop the timer if the press is canceled
+                            }
+                        }
+
+                        Timer {
+                            id: longPressTimer
+                            interval: 125
+                            repeat: false
+                            onTriggered: {
+                                if (cell.buttonEnabled === true) {
+                                    keypadBuzz.play()
+                                    if (controlMode) { // Long press action
+                                        flagCell(cell, index)
+                                    } else {
+                                        revealCell(cell, index)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+            }
+        }
+
+    }
+
+    Column { // why is this a column?
+        id: gameFooter
         width: parent.width
+        anchors.bottom: parent.bottom
         z: 1
         Row {
             // This row contains the timer, a reset button,
@@ -78,81 +170,12 @@ Page {
         }
     }
 
-    Flickable {
-        id: scrollableArea
-        anchors.fill: parent
-        anchors.topMargin: gameHeader.height
-        contentWidth: grid.width    // Sets the horizontal scroll limit
-        contentHeight: grid.height  // Sets the vertical scroll limit
-        clip: true                         // Clips content to keep it within viewable area
-        scale: 1.0
-
-        Grid {
-            id: grid
-            columns: gridSize
-            anchors.centerIn: parent
-            spacing: 2
-
-            Repeater {
-                model: gridSize * gridSize
-                SilicaFlickable {
-                    id: cell
-                    width: 100
-                    height: 120
-
-                    // Expose Button's text property through an alias
-                    property alias buttonText: cellButton.text
-                    property alias buttonEnabled: cellButton.enabled
-
-                    // there are gridSize^2 buttons generated here,
-                    // each representing a cell on the minefield.
-                    Button {
-                        id: cellButton
-                        text: ""
-                        anchors.fill: parent
-
-                        // The following logic determines if a button
-                        // is pressed or long-pressed.
-                        MouseArea {
-                            id: mouseArea
-                            anchors.fill: parent
-                            onPressed: {
-                                longPressTimer.start()  // Start the timer on press
-                            }
-                            onReleased: {
-                                if (longPressTimer.running) {
-                                    longPressTimer.stop()  // Stop the timer if it's running
-                                    revealCell(cell, index)  // Short press action
-                                }
-                            }
-                            onCanceled: {
-                                longPressTimer.stop()  // Stop the timer if the press is canceled
-                            }
-                        }
-
-                        Timer {
-                            id: longPressTimer
-                            interval: 125
-                            repeat: false
-                            onTriggered: {
-                                if (cell.buttonEnabled === true) {
-                                    flagCell(cell)  // Long press action
-                                }
-                            }
-                        }
-                    }
-
-
-                }
-            }
-        }
-
-    }
     // when the screen is loaded,
     // start the game.
     Component.onCompleted: {
         initialiseBoard();
         gameTimer.start();
+        console.log(grid.width);
     }
 
     function updateTimer() {
@@ -210,8 +233,7 @@ Page {
         return adjacentMineCount;
     }
 
-    function flagCell(cell) {
-        keypadBuzz.play()
+    function flagCell(cell, index) {
         if (cell.buttonText === "🏳") {
             cell.buttonText = "";
             mineCount.text = mineCount.text*1 + 1;
@@ -234,6 +256,18 @@ Page {
                     gameTimer.stop();
                     Notices.show("You won!", Notice.Short, Notice.Center);
                 }
+            }
+        } else if (cell.buttonText !== "") {
+            // TODO: This is a repeat of code from revealCell().
+            //       Never repeat code! Break this out into it's own function!
+            //       This is here so that if controlMode is false, tapping a numbered
+            //       cell will still reveal its surrounding cells (provided they're not flagged).
+            // if the button has been given a value already,
+            // clicking on it should reveal its adjacent cells.
+            var indices = getAdjacentIndices(index); // continue checking all adjacent cells until we find mines.
+            for (var j = 0; j < indices.length; j++) {
+                if (grid.children[indices[j]].buttonEnabled !== false) {
+                revealCell(grid.children[indices[j]], indices[j]); }
             }
         }
     }
@@ -303,6 +337,7 @@ Page {
             // stop timer
             gameTimer.stop();
 
+            longBuzz.play();
             Notices.show("You lost!", Notice.Short, Notice.Center);
         }
     }
@@ -362,8 +397,8 @@ Page {
         }
 
         // Update Flickable content size to allow panning when zoomed
-        scrollableArea.contentWidth = grid.width * grid.scale
-        scrollableArea.contentHeight = grid.height * grid.scale
+        scrollableArea.contentWidth = (grid.width) * grid.scale + 750
+        scrollableArea.contentHeight = (grid.height) * grid.scale + 750
     }
 
 
