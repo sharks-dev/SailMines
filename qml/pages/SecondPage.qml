@@ -8,17 +8,39 @@ Page {
         anchors.fill: parent
         contentHeight: column.height + Theme.paddingLarge
 
-        VerticalScrollDecorator {}
+        VerticalScrollDecorator {} //What's this doing?
         Column {
             id: column
             spacing: Theme.paddingLarge
             width: parent.width
             PageHeader { title: "Options" }
-            Label {
-                text: "Board size: " + Math.round(boardSize.value) + "x" + Math.round(boardSize.value)
+            // Controls for setting minefield (board) size
+            Row {
+                spacing: Theme.paddingLarge
                 anchors.horizontalCenter: parent.horizontalCenter
-                color: palette.highlightColor
-                font.family: Theme.fontFamilyHeading
+                IconButton {
+                    id: sizeDownBtn
+                    height: sizeLabel.height
+                    width: height
+                    anchors.verticalCenter: parent.verticalCenter
+                    icon.source: "image://theme/icon-m-remove"
+                    onClicked: boardSize.value = boardSize.value - 1
+                }
+                Label {
+                    id: sizeLabel
+                    text: "Board size: " + Math.round(boardSize.value) + "x" + Math.round(boardSize.value)
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: palette.highlightColor
+                    font.family: Theme.fontFamilyHeading
+                }
+                IconButton {
+                    id: sizeUpBtn
+                    height: sizeLabel.height
+                    width: height
+                    anchors.verticalCenter: parent.verticalCenter
+                    icon.source: "image://theme/icon-m-add"
+                    onClicked: boardSize.value = boardSize.value + 1
+                }
             }
             Slider {
                 id: boardSize
@@ -29,11 +51,34 @@ Page {
                 maximumValue: 100
                 onValueChanged: editSliderBounds();
             }
-            Label {
-                text: "Mine count: " + Math.round(mineCount.value)
+
+            // Controls for setting mine count
+            Row {
+                spacing: Theme.paddingLarge
                 anchors.horizontalCenter: parent.horizontalCenter
-                color: palette.highlightColor
-                font.family: Theme.fontFamilyHeading
+                IconButton {
+                    id: minesDownBtn
+                    height: minesLabel.height
+                    width: height
+                    anchors.verticalCenter: parent.verticalCenter
+                    icon.source: "image://theme/icon-m-remove"
+                    onClicked: mineCount.value = mineCount.value - 1
+                }
+                Label {
+                    id: minesLabel
+                    text: "Mine count: " + Math.round(mineCount.value)
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: palette.highlightColor
+                    font.family: Theme.fontFamilyHeading
+                }
+                IconButton {
+                    id: minesUpBtn
+                    height: minesLabel.height
+                    width: height
+                    anchors.verticalCenter: parent.verticalCenter
+                    icon.source: "image://theme/icon-m-add"
+                    onClicked: mineCount.value = mineCount.value + 1
+                }
             }
             Slider {
                 id: mineCount
@@ -44,6 +89,7 @@ Page {
                 maximumValue: gridSize * gridSize - 1
             }
 
+            // Apply configuration changes to game
             Button {
                 id: save
                 text: "Apply"
@@ -51,6 +97,7 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
+            // Some information for the user (controls, source, etc.)
             Column {
                 x: Theme.paddingLarge
                 width: parent.width - 2*x
@@ -71,7 +118,7 @@ Page {
             LinkedLabel {
                 x: Theme.horizontalPageMargin
                 width: parent.width - 2*x
-                plainText: "Source available, GPL3: https://github.com/Doofitator/SailMines"
+                plainText: "Source available, GPL3: https://github.com/sharks-dev/SailMines"
             }
 
 
