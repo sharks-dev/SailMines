@@ -85,11 +85,7 @@ Page {
                             onReleased: {
                                 if (longPressTimer.running) {
                                     longPressTimer.stop()  // Stop the timer if it's running
-                                    if (controlMode) { // Short press action
-                                        revealCell(cell, index)
-                                    } else {
-                                        flagCell(cell, index)
-                                    }
+                                    buttonPress(!controlMode, cell, index); // Short press action
                                 }
                             }
                             onCanceled: {
@@ -103,18 +99,12 @@ Page {
                             repeat: false
                             onTriggered: {
                                 if (cell.buttonEnabled === true) {
-                                    keypadBuzz.play()
-                                    if (controlMode) { // Long press action
-                                        flagCell(cell, index)
-                                    } else {
-                                        revealCell(cell, index)
-                                    }
+                                    keypadBuzz.play();
+                                    buttonPress(controlMode, cell, index); // Long press action
                                 }
                             }
                         }
                     }
-
-
                 }
             }
         }
@@ -233,6 +223,24 @@ Page {
         return adjacentMineCount;
     }
 
+    function buttonPress(longpress, cell, index) {
+        if (cell.buttonText !== "") {
+            // if the button has been given a value already,
+            // clicking on it should reveal its adjacent cells.
+            var indices = getAdjacentIndices(index); // continue checking all adjacent cells until we find mines.
+            for (var j = 0; j < indices.length; j++) {
+                if (grid.children[indices[j]].buttonEnabled !== false) {
+                revealCell(grid.children[indices[j]], indices[j]); }
+            }
+        } else {
+            if (longpress) {
+                flagCell(cell, index);
+            } else {
+                revealCell(cell, index);
+            }
+        }
+    }
+
     function flagCell(cell, index) {
         if (cell.buttonText === "🏳") {
             cell.buttonText = "";
@@ -257,18 +265,6 @@ Page {
                     Notices.show("You won!", Notice.Short, Notice.Center);
                 }
             }
-        } else if (cell.buttonText !== "") {
-            // TODO: This is a repeat of code from revealCell().
-            //       Never repeat code! Break this out into it's own function!
-            //       This is here so that if controlMode is false, tapping a numbered
-            //       cell will still reveal its surrounding cells (provided they're not flagged).
-            // if the button has been given a value already,
-            // clicking on it should reveal its adjacent cells.
-            var indices = getAdjacentIndices(index); // continue checking all adjacent cells until we find mines.
-            for (var j = 0; j < indices.length; j++) {
-                if (grid.children[indices[j]].buttonEnabled !== false) {
-                revealCell(grid.children[indices[j]], indices[j]); }
-            }
         }
     }
 
@@ -280,14 +276,6 @@ Page {
             // if the cell has been flagged,
             // we don't want to accidentally press it.
             return;
-        } else if (cell.buttonText !== "") {
-            // if the button has been given a value already,
-            // clicking on it should reveal its adjacent cells.
-            var indices = getAdjacentIndices(index); // continue checking all adjacent cells until we find mines.
-            for (var j = 0; j < indices.length; j++) {
-                if (grid.children[indices[j]].buttonEnabled !== false) {
-                revealCell(grid.children[indices[j]], indices[j]); }
-            }
         }
 
 

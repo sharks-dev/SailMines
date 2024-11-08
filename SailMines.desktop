@@ -6,9 +6,7 @@ Exec=SailMines
 Name=SailMines
 
 [X-Sailjail]
-# Replace with your organization as a reverse domain name
-OrganizationName=io.github.doofitator
-# ApplicationName does not have to be identical to Name
+OrganizationName=io.github.sharks-dev
 ApplicationName=SailMines
 # Add the required permissions here
 Permissions=
