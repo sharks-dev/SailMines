@@ -12,6 +12,7 @@ ApplicationWindow {
     property int numMines: 25 // Number of mines
 
     property bool controlMode: true // tap to reveal vs. tap to flag
+    property bool mineHints: false // do we give "hints" when the right number of flags are there?
 
 }
 

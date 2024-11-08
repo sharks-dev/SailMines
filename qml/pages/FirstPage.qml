@@ -66,6 +66,7 @@ Page {
                     // Expose Button's text property through an alias
                     property alias buttonText: cellButton.text
                     property alias buttonEnabled: cellButton.enabled
+                    property alias buttonColour: cellButton.color
 
                     // there are gridSize^2 buttons generated here,
                     // each representing a cell on the minefield.
@@ -143,7 +144,7 @@ Page {
                 id: options
                 icon.source: "image://theme/icon-m-setting"
                 anchors.verticalCenter: parent.verticalCenter
-                onClicked: pageStack.animatorPush(Qt.resolvedUrl("SecondPage.qml"))
+                onClicked: pageStack.animatorPush(Qt.resolvedUrl("SecondPage.qml"), { gamePageRef: gamePage })
             }
             Label {
                 id: mineCount
@@ -178,10 +179,11 @@ Page {
         mineCount.text = numMines;
         timerText.text = 0;
 
-        // Enable every button, set its text to nothing
+        // Enable every button, set its text to nothing, set its colour to primary.
         for (i = 0; i < board.length; i++) {
             grid.children[i].buttonEnabled = true;
             grid.children[i].buttonText = "";
+            grid.children[i].buttonColour = palette.primaryColor;
         }
 
         // Create an array of size gridSize * gridSize with all elements set to 0
@@ -224,7 +226,7 @@ Page {
     }
 
     function buttonPress(longpress, cell, index) {
-        if (cell.buttonText !== "") {
+        if ((cell.buttonText !== "") && (cell.buttonText !== "🏳")) { // if it is a 'number' cell
             // if the button has been given a value already,
             // clicking on it should reveal its adjacent cells.
             var indices = getAdjacentIndices(index); // continue checking all adjacent cells until we find mines.
@@ -239,10 +241,48 @@ Page {
                 revealCell(cell, index);
             }
         }
+
+        if (mineHints) { // if the settings are configured such,
+            var adjacentCells = getAdjacentIndices(index);
+            for (var j = 0; j < adjacentCells.length; j++) { // for each adjacent cell to the one pressed
+                highlightCell(adjacentCells[j]);
+            }
+        }
+    }
+
+    function applyHighlights() {
+        for (i = 0; i < board.length; i++) {
+            if (!mineHints) {
+                highlightCell(i);
+            } else {
+                grid.children[i].buttonColour = palette.primaryColor;
+            }
+        }
+    }
+
+    function highlightCell(index) {
+        if ((grid.children[index].buttonText !== "") && (grid.children[index].buttonText !== "🏳")) { // if it is a 'number' cell (TODO: will it work on blank cells??)
+            var adjacentMines = countAdjacentMines(index);
+            var potentialFlags = getAdjacentIndices(index);
+            var flagCount = 0;
+
+            for (var k = 0; k < potentialFlags.length; k++) { // for each cell adjacent to that adjacent cell
+                if (grid.children[potentialFlags[k]].buttonText === "🏳") { // if it is flagged
+                    flagCount += 1; // make a note of that
+                }
+            }
+
+            if (flagCount === adjacentMines) { // check the number of flags matches the requirement
+                grid.children[index].buttonColour = palette.secondaryColor; // let the user see that
+            } else {
+                grid.children[index].buttonColour = palette.primaryColor;
+            }
+        }
     }
 
     function flagCell(cell, index) {
         if (cell.buttonText === "🏳") {
+            // unflag cell
             cell.buttonText = "";
             mineCount.text = mineCount.text*1 + 1;
         } else if (cell.buttonText === "") {
@@ -384,6 +424,10 @@ Page {
             }
         }
 
+        fixScrollBounds();
+    }
+
+    function fixScrollBounds() {
         // Update Flickable content size to allow panning when zoomed
         scrollableArea.contentWidth = (grid.width) * grid.scale + 750
         scrollableArea.contentHeight = (grid.height) * grid.scale + 750

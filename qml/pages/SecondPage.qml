@@ -4,6 +4,8 @@ import Sailfish.Silica 1.0
 Page {
     id: settingPage
 
+    property Page gamePageRef
+
     SilicaFlickable {
         anchors.fill: parent
         contentHeight: column.height + Theme.paddingLarge
@@ -128,6 +130,24 @@ Page {
                 }
             }
 
+            // Options for the game hints
+            Column {
+                id: gameHints
+                width: parent.width
+                Label {
+                    text: "Hints: "
+                    color: palette.highlightColor
+                    wrapMode: Text.Wrap
+                    width: parent.width
+                }
+                TextSwitch {
+                    id: hintsSwitch
+                    text: "Highlight cells when the correct number of surround it"
+                    checked: mineHints
+                    onClicked: toggleMineHints()
+                }
+            }
+
             // Information
 
             LinkedLabel {
@@ -146,7 +166,8 @@ Page {
         // [W] unknown:65 - file:///usr/share/SailMines/qml/pages/SecondPage.qml:65: ReferenceError: gamePage is not defined
         gridSize = Math.round(boardSize.value);
         numMines = Math.round(mineCount.value);
-        //gamePage.initialiseBoard();
+        gamePageRef.initialiseBoard();
+        gamePageRef.fixScrollBounds();
     }
 
     function editSliderBounds() {
@@ -161,8 +182,12 @@ Page {
         controlMode = temp;
         controlSwitch1.checked = temp;
         controlSwitch2.checked = !temp;
+    }
 
-        column.controls = temp;
+    function toggleMineHints() {
+        var temp = !mineHints;
+        gamePageRef.applyHighlights();
+        mineHints = temp;
     }
 
 }
