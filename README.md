@@ -1,6 +1,16 @@
 # SailMines
 ### A minesweeper clone for Sailfish OS
 
+Planned features:
+
+* Auto-save progress so that you can pick up again where you left off in long games
+
+Known bugs:
+
+* Reducing the dimensions of the minefield breaks the generation of new minefields, requiring restarting the app. Increasing them, however, works normally.
+* Really large minefields with really small numbers of mines behave a bit weird.
+
+
 Work-in-progress. Screenshots below:
 <table>
   <td><img src="https://raw.githubusercontent.com/sharks-dev/SailMines/refs/heads/main/screenshots/won.png" alt="won" width="200"/></td>
@@ -9,7 +19,6 @@ Work-in-progress. Screenshots below:
   <td><img src="https://raw.githubusercontent.com/sharks-dev/SailMines/refs/heads/main/screenshots/settings.png" alt="settings" width="200"/></td>
 </table>
 
-Yet to implement:
-* Pinch-to-zoom on minefield
-* Win/loss animations
-* Save progress
+Icon attributions:
+* Sea Mine: <a href="https://www.flaticon.com/free-icons/ship" title="ship icons">created by Smashicons - Flaticon</a>
+* SailBoat: <a href="https://www.flaticon.com/free-icons/boat" title="boat icons">created by turkkub - Flaticon</a>
