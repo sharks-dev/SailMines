@@ -34,7 +34,7 @@ Page {
                     width: height
                     anchors.verticalCenter: parent.verticalCenter
                     icon.source: "image://theme/icon-m-remove"
-                    onClicked: boardSize.value = boardSize.value - 1
+                    onClicked: if (boardSize.value - 1 > boardSize.minimumValue) { boardSize.value = boardSize.value - 1; }
                 }
                 Label {
                     id: sizeLabel
@@ -49,7 +49,7 @@ Page {
                     width: height
                     anchors.verticalCenter: parent.verticalCenter
                     icon.source: "image://theme/icon-m-add"
-                    onClicked: boardSize.value = boardSize.value + 1
+                    onClicked: if (boardSize.value + 1 < boardSize.maximumValue) { boardSize.value = boardSize.value + 1; }
                 }
             }
             Slider {
@@ -72,7 +72,7 @@ Page {
                     width: height
                     anchors.verticalCenter: parent.verticalCenter
                     icon.source: "image://theme/icon-m-remove"
-                    onClicked: mineCount.value = mineCount.value - 1
+                    onClicked: if (mineCount.value - 1 > mineCount.minimumValue) { mineCount.value = mineCount.value - 1; }
                 }
                 Label {
                     id: minesLabel
@@ -87,7 +87,7 @@ Page {
                     width: height
                     anchors.verticalCenter: parent.verticalCenter
                     icon.source: "image://theme/icon-m-add"
-                    onClicked: mineCount.value = mineCount.value + 1
+                    onClicked: if (mineCount.value + 1 < mineCount.maximumValue) { mineCount.value = mineCount.value + 1; }
                 }
             }
             Slider {
