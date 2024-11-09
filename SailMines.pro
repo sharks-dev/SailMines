@@ -18,8 +18,8 @@ SOURCES += src/SailMines.cpp
 
 DISTFILES += qml/SailMines.qml \
     qml/cover/CoverPage.qml \
-    qml/pages/FirstPage.qml \
-    qml/pages/SecondPage.qml \
+    qml/pages/MinefieldPage.qml \
+    qml/pages/SettingsPage.qml \
     rpm/SailMines.changes.in \
     rpm/SailMines.changes.run.in \
     rpm/SailMines.spec \

@@ -27,7 +27,7 @@ Page {
         effect: ThemeEffect.PressStrong
     }
 
-    // This timer controls the counter at the top
+    // This timer controls the counter at the bottom
     // of the screen, indicating how many seconds
     // it's taken so far for you to sweep the field.
     Timer {
@@ -52,12 +52,12 @@ Page {
 
         Grid {
             id: grid
-            columns: gridSize
+            columns: gridSize.value
             anchors.centerIn: parent
             spacing: 2
 
             Repeater {
-                model: gridSize * gridSize
+                model: gridSize.value * gridSize.value
                 SilicaFlickable {
                     id: cell
                     width: 100
@@ -68,7 +68,7 @@ Page {
                     property alias buttonEnabled: cellButton.enabled
                     property alias buttonColour: cellButton.color
 
-                    // there are gridSize^2 buttons generated here,
+                    // there are gridSize.value^2 buttons generated here,
                     // each representing a cell on the minefield.
                     Button {
                         id: cellButton
@@ -86,7 +86,7 @@ Page {
                             onReleased: {
                                 if (longPressTimer.running) {
                                     longPressTimer.stop()  // Stop the timer if it's running
-                                    buttonPress(!controlMode, cell, index); // Short press action
+                                    buttonPress(!controlMode.value, cell, index); // Short press action
                                 }
                             }
                             onCanceled: {
@@ -101,7 +101,7 @@ Page {
                             onTriggered: {
                                 if (cell.buttonEnabled === true) {
                                     keypadBuzz.play();
-                                    buttonPress(controlMode, cell, index); // Long press action
+                                    buttonPress(controlMode.value, cell, index); // Long press action
                                 }
                             }
                         }
@@ -144,11 +144,11 @@ Page {
                 id: options
                 icon.source: "image://theme/icon-m-setting"
                 anchors.verticalCenter: parent.verticalCenter
-                onClicked: pageStack.animatorPush(Qt.resolvedUrl("SecondPage.qml"), { gamePageRef: gamePage })
+                onClicked: pageStack.animatorPush(Qt.resolvedUrl("SettingsPage.qml"), { gamePageRef: gamePage })
             }
             Label {
                 id: mineCount
-                text: "MineCount"
+                text: "NaN"
                 anchors.verticalCenter: parent.verticalCenter
                 font.family: Theme.fontFamilyHeading
             }
@@ -176,7 +176,7 @@ Page {
     function initialiseBoard() {
         // reset the game header data
         gameTimer.start();
-        mineCount.text = numMines;
+        mineCount.text = numMines.value;
         timerText.text = 0;
 
         // Enable every button, set its text to nothing, set its colour to primary.
@@ -186,15 +186,15 @@ Page {
             grid.children[i].buttonColour = palette.primaryColor;
         }
 
-        // Create an array of size gridSize * gridSize with all elements set to 0
+        // Create an array of size gridSize.value * gridSize.value with all elements set to 0
         board = []
-        for (i = 0; i < gridSize * gridSize; i++) {
+        for (i = 0; i < gridSize.value * gridSize.value; i++) {
             board.push(0)
         }
 
         // Randomly place mines (value -1 indicates a mine)
         mines = 0
-        while (mines < numMines) {
+        while (mines < numMines.value) {
             idx = Math.floor(Math.random() * board.length)
             if (board[idx] !== -1) { // Check if there is no mine
                 board[idx] = -1       // Place a mine
@@ -242,7 +242,7 @@ Page {
             }
         }
 
-        if (mineHints) { // if the settings are configured such,
+        if (mineHints.value) { // if the settings are configured such,
             var adjacentCells = getAdjacentIndices(index);
             for (var j = 0; j < adjacentCells.length; j++) { // for each adjacent cell to the one pressed
                 highlightCell(adjacentCells[j]);
@@ -252,7 +252,7 @@ Page {
 
     function applyHighlights() {
         for (i = 0; i < board.length; i++) {
-            if (!mineHints) {
+            if (!mineHints.value) {
                 highlightCell(i);
             } else {
                 grid.children[i].buttonColour = palette.primaryColor;
@@ -299,7 +299,7 @@ Page {
                         }
                     }
                 }
-                if (count === numMines) {
+                if (count === numMines.value) {
                     // we know the flags were in the right spot.
                     gameTimer.stop();
                     Notices.show("You won!", Notice.Short, Notice.Center);
@@ -339,7 +339,7 @@ Page {
             }
 
             // if the number of still enabled cells = numMines, you win! 🏳🏳
-            if (count === numMines) {
+            if (count === numMines.value) {
                 for (i = 0; i < board.length; i++) {
                     if (board[i] === -1) {
                         grid.children[i].buttonText = "🏳";
@@ -374,26 +374,26 @@ Page {
         var indices = [];
 
         // Calculate grid position
-        var row = Math.floor(idx / gridSize);
-        var col = idx % gridSize;
+        var row = Math.floor(idx / gridSize.value);
+        var col = idx % gridSize.value;
 
         // Define adjacent positions (up, down, left, right, etc.)
         var adjacentIndexes = [
-            idx - gridSize - 1,    // Up & Left
-            idx - gridSize,        // Up
-            idx - gridSize + 1,    // Up & Right
-            idx + gridSize - 1,    // Down & Left
-            idx + gridSize,        // Down
-            idx + gridSize + 1,    // Up & Right
+            idx - gridSize.value - 1,    // Up & Left
+            idx - gridSize.value,        // Up
+            idx - gridSize.value + 1,    // Up & Right
+            idx + gridSize.value - 1,    // Down & Left
+            idx + gridSize.value,        // Down
+            idx + gridSize.value + 1,    // Up & Right
             idx - 1,               // Left
             idx + 1                // Right
         ];
 
         // Update adjacent cells' text if within bounds
         adjacentIndexes.forEach(function(adjIdx) {
-            if (adjIdx >= 0 && adjIdx < gridSize * gridSize) {
-                var adjRow = Math.floor(adjIdx / gridSize);
-                var adjCol = adjIdx % gridSize;
+            if (adjIdx >= 0 && adjIdx < gridSize.value * gridSize.value) {
+                var adjRow = Math.floor(adjIdx / gridSize.value);
+                var adjCol = adjIdx % gridSize.value;
 
                 // Ensure left and right adjacency don't wrap
                 if (Math.abs(row - adjRow) <= 1 && Math.abs(col - adjCol) <= 1) {

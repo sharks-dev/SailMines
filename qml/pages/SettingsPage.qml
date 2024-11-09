@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import Nemo.Configuration 1.0
 
 Page {
     id: settingPage
@@ -55,7 +56,7 @@ Page {
                 id: boardSize
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
-                value: gridSize
+                value: gridSize.value
                 minimumValue: 10
                 maximumValue: 100
                 onValueChanged: editSliderBounds();
@@ -93,9 +94,9 @@ Page {
                 id: mineCount
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
-                value: numMines
+                value: numMines.value
                 minimumValue: 1
-                maximumValue: gridSize * gridSize - 1
+                maximumValue: gridSize.value * gridSize.value - 1
             }
 
             // Apply configuration changes to game
@@ -119,13 +120,13 @@ Page {
                 TextSwitch {
                     id: controlSwitch1
                     text: "Tap to reveal, hold to flag"
-                    checked: controlMode
+                    checked: controlMode.value
                     onClicked: changeControls()
                 }
                 TextSwitch {
                     id: controlSwitch2
                     text: "Tap to flag, hold to reveal"
-                    checked: !controlMode
+                    checked: !controlMode.value
                     onClicked: changeControls()
                 }
             }
@@ -142,8 +143,8 @@ Page {
                 }
                 TextSwitch {
                     id: hintsSwitch
-                    text: "Highlight cells when the correct number of surround it"
-                    checked: mineHints
+                    text: "Highlight cells when the correct number of flags surround it"
+                    checked: mineHints.value
                     onClicked: toggleMineHints()
                 }
             }
@@ -162,10 +163,8 @@ Page {
     }
 
     function rebuildGrid() {
-        // TODO: This doesn't work.
-        // [W] unknown:65 - file:///usr/share/SailMines/qml/pages/SecondPage.qml:65: ReferenceError: gamePage is not defined
-        gridSize = Math.round(boardSize.value);
-        numMines = Math.round(mineCount.value);
+        gridSize.value = Math.round(boardSize.value);
+        numMines.value = Math.round(mineCount.value);
         gamePageRef.initialiseBoard();
         gamePageRef.fixScrollBounds();
     }
@@ -178,16 +177,16 @@ Page {
     }
 
     function changeControls() {
-        var temp = !controlMode;
-        controlMode = temp;
+        var temp = !controlMode.value;
+        controlMode.value = temp;
         controlSwitch1.checked = temp;
         controlSwitch2.checked = !temp;
     }
 
     function toggleMineHints() {
-        var temp = !mineHints;
+        var temp = !mineHints.value;
         gamePageRef.applyHighlights();
-        mineHints = temp;
+        mineHints.value = temp;
     }
 
 }
