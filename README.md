@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/sharks-dev/SailMines/refs/heads/main/icons/172x172/SailMines.png" height="100" />
+
 # SailMines
 ### A minesweeper clone for Sailfish OS
 
