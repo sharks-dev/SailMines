@@ -286,6 +286,11 @@ Page {
             cell.buttonText = "";
             mineCount.text = mineCount.text*1 + 1;
         } else if (cell.buttonText === "") {
+            if (!cell.buttonEnabled) { return; } // Because we run this function
+                                                 // based on a mouseArea event rather
+                                                 // than actually listening to the
+                                                 // button click, we need to perform
+                                                 // this check.
             cell.buttonText = "🏳"
             mineCount.text = mineCount.text*1 - 1;
             if (mineCount.text === "0") {
