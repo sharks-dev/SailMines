@@ -13,4 +13,3 @@ Yet to implement:
 * Pinch-to-zoom on minefield
 * Win/loss animations
 * Save progress
-* Save settings
