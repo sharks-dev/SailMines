@@ -11,6 +11,8 @@ Page {
     property int i: 0
     property int idx: 0
 
+    property bool isFirstPress: true
+
     // controls the flag vibration
     ThemeEffect {
         id: keypadBuzz
@@ -165,8 +167,6 @@ Page {
     // start the game.
     Component.onCompleted: {
         initialiseBoard();
-        gameTimer.start();
-        console.log(grid.width);
     }
 
     function updateTimer() {
@@ -175,39 +175,19 @@ Page {
 
     function initialiseBoard() {
         // reset the game header data
-        gameTimer.start();
+        gameTimer.stop();
         mineCount.text = numMines.value;
         timerText.text = 0;
+        isFirstPress = true;
 
         // Enable every button, set its text to nothing, set its colour to primary.
-        for (i = 0; i < board.length; i++) {
+        for (i = 0; i < (gridSize.value * gridSize.value); i++) {
             grid.children[i].buttonEnabled = true;
             grid.children[i].buttonText = "";
             grid.children[i].buttonColour = palette.primaryColor;
         }
 
-        // Create an array of size gridSize.value * gridSize.value with all elements set to 0
-        board = []
-        for (i = 0; i < gridSize.value * gridSize.value; i++) {
-            board.push(0)
-        }
 
-        // Randomly place mines (value -1 indicates a mine)
-        mines = 0
-        while (mines < numMines.value) {
-            idx = Math.floor(Math.random() * board.length)
-            if (board[idx] !== -1) { // Check if there is no mine
-                board[idx] = -1       // Place a mine
-                mines++
-            }
-        }
-
-        // Calculate adjacent mines for each cell
-        for (i = 0; i < board.length; i++) {
-            if (board[i] !== -1) {
-                board[i] = countAdjacentMines(i)
-            }
-        }
     }
 
     function countAdjacentMines(index) {
@@ -226,10 +206,11 @@ Page {
     }
 
     function buttonPress(longpress, cell, index) {
+        var indices = getAdjacentIndices(index);
         if ((cell.buttonText !== "") && (cell.buttonText !== "🏳")) { // if it is a 'number' cell
             // if the button has been given a value already,
             // clicking on it should reveal its adjacent cells.
-            var indices = getAdjacentIndices(index); // continue checking all adjacent cells until we find mines.
+            // continue checking all adjacent cells until we find mines.
             for (var j = 0; j < indices.length; j++) {
                 if (grid.children[indices[j]].buttonEnabled !== false) {
                 revealCell(grid.children[indices[j]], indices[j]); }
@@ -238,6 +219,50 @@ Page {
             if (longpress) {
                 flagCell(cell, index);
             } else {
+                if (isFirstPress) {
+                    // begin game
+                    gameTimer.start();
+
+                    // we need to generate the minefield
+
+                    // Create an array of size gridSize.value * gridSize.value with all elements set to 0
+                    board = []
+                    for (i = 0; i < gridSize.value * gridSize.value; i++) {
+                        board.push(0)
+                    }
+
+                    // Randomly place mines (value -1 indicates a mine)
+                    mines = 0
+                    while (mines < numMines.value) {
+                        idx = Math.floor(Math.random() * board.length)
+                        if (board[idx] !== -1) { // Check if there is no mine
+                            if (freeSpace.value) { // if we need a "safe space" around the first tap,
+                              //get adjacent cells
+                                if (!(idx === index)) { // if the mine is not to be on the cell we tapped
+                                    for (var j = 0; j < indices.length; j++) {
+                                        if (!(idx === indices[j])) { // if the mine is not to be adjacent to the cell we tapped
+                                            board[idx] = -1       // Place a mine
+                                            mines++
+                                        }
+                                    }
+                                }
+                            } else { // if we don't need to worry about the "safe space" rule,
+                                board[idx] = -1       // Place a mine, who cares where it is.
+                                mines++
+                            }
+                        }
+                    }
+
+                    // Calculate adjacent mines for each cell
+                    for (i = 0; i < board.length; i++) {
+                        if (board[i] !== -1) {
+                            board[i] = countAdjacentMines(i)
+                        }
+                    }
+
+                    isFirstPress = false;
+                }
+
                 revealCell(cell, index);
             }
         }

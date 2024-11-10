@@ -59,7 +59,7 @@ Page {
                 value: gridSize.value
                 minimumValue: 10
                 maximumValue: 100
-                onValueChanged: editSliderBounds();
+                onValueChanged: resetMineCountMax()
             }
 
             // Controls for setting mine count
@@ -96,7 +96,7 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 value: numMines.value
                 minimumValue: 1
-                maximumValue: gridSize.value * gridSize.value - 1
+                maximumValue: if (freeSpace.value) { gridSize.value * gridSize.value - 9; } else { gridSize.value * gridSize.value - 1; }
             }
 
             // Apply configuration changes to game
@@ -136,16 +136,40 @@ Page {
                 id: gameHints
                 width: parent.width
                 Label {
-                    text: "Hints: "
+                    text: "Assists: "
                     color: palette.highlightColor
                     wrapMode: Text.Wrap
                     width: parent.width
                 }
                 TextSwitch {
                     id: hintsSwitch
-                    text: "Highlight cells when the correct number of flags surround it"
+                    text: "Dim cells when the correct number of flags surround them"
                     checked: mineHints.value
-                    onClicked: toggleMineHints()
+                    onClicked: {
+                        var temp = !mineHints.value;
+                        gamePageRef.applyHighlights();
+                        mineHints.value = temp;
+                    }
+                }
+                TextSwitch {
+                    id: tapShieldSwitch
+                    text: "Prevent accidental presses of cells that do not have the correct number of flags surrounding them"
+                    checked: tapShield.value
+                    enabled: false
+                    onClicked: {
+                        var temp = !tapShield.value;
+                        tapShield.value = temp;
+                    }
+                }
+                TextSwitch {
+                    id: freeSpaceSwitch
+                    text: "Ensure there's always some free space around your first cell"
+                    checked: freeSpace.value
+                    onClicked: {
+                        var temp = !freeSpace.value;
+                        freeSpace.value = temp;
+                        resetMineCountMax();
+                    }
                 }
             }
 
@@ -169,13 +193,6 @@ Page {
         gamePageRef.fixScrollBounds();
     }
 
-    function editSliderBounds() {
-        mineCount.maximumValue = Math.round(boardSize.value) * Math.round(boardSize.value) - 1;
-        if (mineCount.value > mineCount.maximumValue) {
-            mineCount.value = mineCount.maximumValue;
-        }
-    }
-
     function changeControls() {
         var temp = !controlMode.value;
         controlMode.value = temp;
@@ -183,10 +200,17 @@ Page {
         controlSwitch2.checked = !temp;
     }
 
-    function toggleMineHints() {
-        var temp = !mineHints.value;
-        gamePageRef.applyHighlights();
-        mineHints.value = temp;
+    function resetMineCountMax() {
+        if (freeSpace.value) {
+            mineCount.maximumValue = Math.round(boardSize.value) * Math.round(boardSize.value) - 9;
+        } else {
+            mineCount.maximumValue = Math.round(boardSize.value) * Math.round(boardSize.value) - 1;
+        }
+
+
+        if (mineCount.value > mineCount.maximumValue) {
+            mineCount.value = mineCount.maximumValue;
+        }
     }
 
 }
