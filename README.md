@@ -9,7 +9,6 @@ Planned features:
 
 Known bugs:
 
-* Reducing the dimensions of the minefield breaks the generation of new minefields, requiring restarting the app. Increasing them, however, works normally.
 * Really large minefields with really small numbers of mines behave a bit weird.
 
 
