@@ -245,15 +245,12 @@ Page {
                                     //        actually I think it's working, but SFOS gets in the
                                     //        way and calls "Maximum call stack size exceeded" before
                                     //        we can finish placing mines.
-                                    //        In other words, I need to do things more efficiently than 
+                                    //        In other words, I need to do things more efficiently than
                                     //        a thousand for/each statements.
-                                    
-                                    for (var j = 0; j < indices.length; j++) {
-                                        if (!(idx === indices[j])) { // if the mine is not to be adjacent to the cell we tapped
-                                            console.log(idx, "<>", indices[j]);
-                                            board[idx] = -1       // Place a mine
-                                            mines++
-                                        }
+
+                                    if (indices.indexOf(idx) === -1) { // if the mine is not to be adjacent to the cell we tapped
+                                        board[idx] = -1       // Place a mine
+                                        mines++
                                     }
                                 }
                             } else { // if we don't need to worry about the "safe space" rule,
