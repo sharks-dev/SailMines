@@ -6,6 +6,11 @@ import "pages"
 ApplicationWindow {
     Item {
         ConfigurationValue {
+            id: holdDuration
+            key: "/apps/sailmines/settings/holdDuration"
+            defaultValue: 125
+        }
+        ConfigurationValue {
             id: gridSize
             key: "/apps/sailmines/settings/gridsize"
             defaultValue: 15

@@ -98,7 +98,7 @@ Page {
 
                         Timer {
                             id: longPressTimer
-                            interval: 125
+                            interval: holdDuration.value
                             repeat: false
                             onTriggered: {
                                 if (cell.buttonEnabled === true) {

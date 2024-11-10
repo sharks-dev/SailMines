@@ -129,6 +129,23 @@ Page {
                     checked: !controlMode.value
                     onClicked: changeControls()
                 }
+
+                Label {
+                    id: holdLabel
+                    text: "Hold duration: " + Math.round(holdSlider.value) + "ms"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: palette.highlightColor
+                    font.family: Theme.fontFamilyHeading
+                }
+                Slider {
+                    id: holdSlider
+                    width: parent.width
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    value: holdDuration.value
+                    minimumValue: 125
+                    maximumValue: 500
+                    onValueChanged: holdDuration.value = holdSlider.value;
+                }
             }
 
             // Options for the game hints
