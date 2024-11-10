@@ -41,13 +41,3 @@ ApplicationWindow {
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
     allowedOrientations: defaultAllowedOrientations
 }
-
-// Ensure there's free space around your first click
-    // This means maximum mineCount = boardSize^2 - 9.
-    // And that we're generating the board on the first click,
-    // not on click of 'Apply' or when the game is launched
-    // (but we still need the 'Apply' button otherwise changing the
-    // slider values might inadvertently destroy progress).
-
-// Disable tapping of numbers that are not surrounded by the correct
-// number of flags.

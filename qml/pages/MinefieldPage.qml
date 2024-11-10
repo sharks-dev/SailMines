@@ -208,13 +208,23 @@ Page {
     function buttonPress(longpress, cell, index) {
         var indices = getAdjacentIndices(index);
         if ((cell.buttonText !== "") && (cell.buttonText !== "🏳")) { // if it is a 'number' cell
-            // if the button has been given a value already,
-            // clicking on it should reveal its adjacent cells.
-            // continue checking all adjacent cells until we find mines.
-            for (var j = 0; j < indices.length; j++) {
-                if (grid.children[indices[j]].buttonEnabled !== false) {
-                revealCell(grid.children[indices[j]], indices[j]); }
-            }
+
+            if (!highlightCell(index) && tapShield.value) { // if the cell is still dangerous
+                    // if we're preventing accidental taps of cells that are potentially still
+                    // dangerous,
+
+                    grid.children[index].buttonColour = palette.errorColor; // warn the user, don't reveal its adjacent cells!
+                    // note this doesn't check if the flags are in the right spot, just that
+                    // there are the right number of flags.
+                } else {
+                    // if the button has been given a value already,
+                    // clicking on it should reveal its adjacent cells.
+                    // continue checking all adjacent cells until we find mines.
+                    for (var j = 0; j < indices.length; j++) {
+                        if (grid.children[indices[j]].buttonEnabled !== false) {
+                        revealCell(grid.children[indices[j]], indices[j]); }
+                    }
+                }
         } else {
             if (longpress) {
                 flagCell(cell, index);
@@ -240,16 +250,7 @@ Page {
                         if (board[idx] !== -1) { // Check if there is no mine in that cell already
                             if (freeSpace.value) { // if we need a "safe space" around the first tap,
                                 if (!(idx === index)) { // if the mine is not to be on the cell we tapped
-                                    console.log(idx, "<>", index);
-                                    // FIXME: the next line breaks everything????
-                                    //        actually I think it's working, but SFOS gets in the
-                                    //        way and calls "Maximum call stack size exceeded" before
-                                    //        we can finish placing mines.
-                                    //        In other words, I need to do things more efficiently than
-                                    //        a thousand for/each statements.
-
                                     if (indices.indexOf(idx) === -1) { // if the mine is not to be adjacent to the cell we tapped
-                                        console.log(idx, "<>", indices[j]);
                                         board[idx] = -1       // Place a mine
                                         mines++
                                     }
@@ -278,7 +279,11 @@ Page {
         if (mineHints.value) { // if the settings are configured such,
             var adjacentCells = getAdjacentIndices(index);
             for (var j = 0; j < adjacentCells.length; j++) { // for each adjacent cell to the one pressed
-                highlightCell(adjacentCells[j]);
+                if (highlightCell(adjacentCells[j])) {
+                    grid.children[adjacentCells[j]].buttonColour = palette.secondaryColor;
+                } else {
+                    grid.children[adjacentCells[j]].buttonColour = palette.primaryColor
+                }
             }
         }
     }
@@ -286,7 +291,11 @@ Page {
     function applyHighlights() {
         for (i = 0; i < board.length; i++) {
             if (!mineHints.value) {
-                highlightCell(i);
+                if (highlightCell(i)) {
+                    grid.children[i].buttonColour = palette.secondaryColor;
+                } else {
+                    grid.children[i].buttonColour = palette.primaryColor
+                }
             } else {
                 grid.children[i].buttonColour = palette.primaryColor;
             }
@@ -306,9 +315,11 @@ Page {
             }
 
             if (flagCount === adjacentMines) { // check the number of flags matches the requirement
-                grid.children[index].buttonColour = palette.secondaryColor; // let the user see that
+                //grid.children[index].buttonColour = palette.secondaryColor; // let the user see that
+                return(true);
             } else {
-                grid.children[index].buttonColour = palette.primaryColor;
+                return(false);
+                //grid.children[index].buttonColour = palette.primaryColor;
             }
         }
     }

@@ -155,7 +155,6 @@ Page {
                     id: tapShieldSwitch
                     text: "Prevent accidental presses of cells that do not have the correct number of flags surrounding them"
                     checked: tapShield.value
-                    enabled: false
                     onClicked: {
                         var temp = !tapShield.value;
                         tapShield.value = temp;
@@ -169,6 +168,7 @@ Page {
                         var temp = !freeSpace.value;
                         freeSpace.value = temp;
                         resetMineCountMax();
+                        numMines.value = Math.round(mineCount.value);
                     }
                 }
             }
