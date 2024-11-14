@@ -1,0 +1,50 @@
+# Rename this file as SailMines.changes to include changelog
+# entries in your RPM file.
+#
+# Add new changelog entries following the format below.
+# Add newest entries to the top of the list.
+# Separate entries from eachother with a blank line.
+#
+# Alternatively, if your changelog is automatically generated (e.g. with
+# the git-change-log command provided with Sailfish OS SDK), create a
+# SailMines.changes.run script to let mb2 run the required commands for you.
+
+# * date Author's Name <author's email> version-release
+# - Summary of changes
+
+* Thu Nov 14 2024 Ash Sharkey <asharkey268@outlook.com> 0.8-1
+- The timer now pauses when the minefield is not on screen
+- Adding translation support
+- Changing application name from 'SailMines' to 'harbour-sailmines', as it should have been from the start.
+- Under the hood improvements
+
+* Sun Nov 10 2024 Ash Sharkey <asharkey268@outlook.com> 0.7-1
+- New App Icon!
+- Fixed bug that allowed 'flagging' of already known-safe cells
+- Fixed bug that broke the game when trying to reduce the minefield size
+- Added option to change the 'hold' delay
+- Added option to ensure the first tap of each game would always result in a protected space (rather than right next to or on top of a mine)
+- Added option to prevent accidental taps of cells with the wrong number of flags surrounding them
+
+* Sat Nov 09 2024 Ash Sharkey <asharkey268@outlook.com> 0.6-1
+- Added persistent storage of user settings, squashed some bugs, fixed some typos.
+
+* Fri Nov 08 2024 Ash Sharkey <asharkey268@outlook.com> 0.5-1
+- Added 'hints' to make it easier to tell when you've flagged your minefield correctly
+- Fixed the bug that required manual restarting of the game after adjusting the minefield dimensions
+
+* Fri Nov 08 2024 Ash Sharkey <asharkey268@outlook.com> 0.4-1
+- Moved the toolbar to the bottom of the screen for easier one-handed action
+- Added a bit of a buffer around the minefield so you don't have to reach right to the edge of the screen anymore
+- Added fine-adjustment for the mine count and minefield size in the settings page
+- Added option to swap the controls in the settings page
+- Adjusted some strings, squashed some bugs and probably created loads of new bugs
+
+* Fri Nov 01 2024 Ash Sharkey <asharkey268@outlook.com> 0.3-1
+- Added functionality to allow the user to zoom in and out when navigating the minefield.
+
+* Thu Oct 31 2024 Ash Sharkey <asharkey268@outlook.com> 0.2-1
+- Initial release, customisable minefield with panning/scrolling support.
+
+* Thu Oct 31 2024 Ash Sharkey <asharkey268@outlook.com> 0.1-1
+- Initial build, no options the user can set. A working 10x10 grid with 5 mines.

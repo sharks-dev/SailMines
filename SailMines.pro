@@ -20,12 +20,9 @@ DISTFILES += qml/SailMines.qml \
     qml/cover/CoverPage.qml \
     qml/pages/MinefieldPage.qml \
     qml/pages/SettingsPage.qml \
-    rpm/SailMines.changes.in \
-    rpm/SailMines.changes.run.in \
+    rpm/SailMines.changes \
     rpm/SailMines.spec \
     translations/*.ts \
     SailMines.desktop
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
-
-VERSION = 0.2.0

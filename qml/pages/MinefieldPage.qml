@@ -2,16 +2,10 @@ import QtQuick 2.0
 import QtFeedback 5.0
 import Sailfish.Silica 1.0
 
-// TODO: Code cleanup. eg. Get rid of `for` loops where they're not needed.
-
 Page {
     id: gamePage
 
     property var board: []
-    property int mines: 0
-    property int adjacentMineCount: 0
-    property int i: 0
-    property int idx: 0
 
     property bool isFirstPress: true
 
@@ -183,7 +177,7 @@ Page {
         isFirstPress = true;
 
         // Enable every button, set its text to nothing, set its colour to primary.
-        for (i = 0; i < (gridSize.value * gridSize.value); i++) {
+        for (var i = 0; i < (gridSize.value * gridSize.value); i++) {
             grid.children[i].buttonEnabled = true;
             grid.children[i].buttonText = "";
             grid.children[i].buttonColour = palette.primaryColor;
@@ -193,7 +187,7 @@ Page {
     }
 
     function countAdjacentMines(index) {
-        adjacentMineCount = 0;
+        var adjacentMineCount = 0;
 
         var indices = getAdjacentIndices(index);
 
@@ -239,15 +233,15 @@ Page {
 
                     // Create an array of size gridSize.value * gridSize.value with all elements set to 0
                     board = []
-                    for (i = 0; i < gridSize.value * gridSize.value; i++) {
+                    for (var i = 0; i < gridSize.value * gridSize.value; i++) {
                         board.push(0)
                     }
 
                     // Randomly place mines (value -1 indicates a mine)
-                    mines = 0
+                    var mines = 0
                     while (mines < numMines.value) {
                         // pick a random cell on the minefield
-                        idx = Math.floor(Math.random() * board.length)
+                        var idx = Math.floor(Math.random() * board.length)
 
                         if (board[idx] !== -1) { // Check if there is no mine in that cell already
                             if (freeSpace.value) { // if we need a "safe space" around the first tap,
@@ -291,7 +285,7 @@ Page {
     }
 
     function applyHighlights() {
-        for (i = 0; i < board.length; i++) {
+        for (var i = 0; i < board.length; i++) {
             if (!mineHints.value) {
                 if (highlightCell(i)) {
                     grid.children[i].buttonColour = palette.secondaryColor;
@@ -353,7 +347,7 @@ Page {
                 if (count === numMines.value) {
                     // we know the flags were in the right spot.
                     gameTimer.stop();
-                    Notices.show("You won!", Notice.Short, Notice.Center);
+                    Notices.show(qsTr("You won!"), Notice.Short, Notice.Center);
                 }
             }
         }
@@ -383,7 +377,7 @@ Page {
 
             // count the number of still enabled cells
             var count = 0;
-            for (i = 0; i < board.length; i++) {
+            for (var i = 0; i < board.length; i++) {
                 if (grid.children[i].buttonEnabled !== false) {
                     count++
                 }
@@ -391,7 +385,7 @@ Page {
 
             // if the number of still enabled cells = numMines, you win! 🏳🏳
             if (count === numMines.value) {
-                for (i = 0; i < board.length; i++) {
+                for (var i = 0; i < board.length; i++) {
                     if (board[i] === -1) {
                         grid.children[i].buttonText = "🏳";
                     }
@@ -399,14 +393,14 @@ Page {
                 mineCount.text = "0";
                 // stop timer
                 gameTimer.stop();
-                Notices.show("You won!", Notice.Short, Notice.Center);
+                Notices.show(qsTr("You won!"), Notice.Short, Notice.Center);
             }
 
         } else {
             // you lose.
 
             // show all the mines
-            for (i = 0; i < board.length; i++) {
+            for (var i = 0; i < board.length; i++) {
                 if (board[i] === -1) {
                     if (grid.children[i].buttonText !== "🏳") {
                     grid.children[i].buttonText = "💣"; }
@@ -417,7 +411,7 @@ Page {
             gameTimer.stop();
 
             longBuzz.play();
-            Notices.show("You lost!", Notice.Short, Notice.Center);
+            Notices.show(qsTr("You lost!"), Notice.Short, Notice.Center);
         }
     }
 

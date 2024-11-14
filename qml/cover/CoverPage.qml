@@ -16,12 +16,12 @@ CoverBackground {
             anchors.horizontalCenter: parent.horizontalCenter
         }
         Label {
-            text: "Field: " + gridSize.value + "x" + gridSize.value + " 🏳"
+            text: qsTr("Field: ") + gridSize.value + "x" + gridSize.value + " 🏳"
             color: palette.highlightColor
             anchors.horizontalCenter: parent.horizontalCenter
         }
         Label {
-            text: "Mines: " + numMines.value + " 💣"
+            text: qsTr("Mines: ") + numMines.value + " 💣"
             color: palette.highlightColor
             anchors.horizontalCenter: parent.horizontalCenter
         }

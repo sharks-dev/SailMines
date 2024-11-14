@@ -20,7 +20,7 @@ Page {
             PageHeader { title: "Options" }
             // Controls for setting minefield (board) size
             Label {
-                text: "Minefield configuration: "
+                text: qsTr("Minefield configuration: ")
                 color: palette.highlightColor
                 wrapMode: Text.Wrap
                 width: parent.width
@@ -38,7 +38,7 @@ Page {
                 }
                 Label {
                     id: sizeLabel
-                    text: "Board size: " + Math.round(boardSize.value) + "x" + Math.round(boardSize.value)
+                    text: qsTr("Board size: ") + Math.round(boardSize.value) + "x" + Math.round(boardSize.value)
                     anchors.verticalCenter: parent.verticalCenter
                     color: palette.highlightColor
                     font.family: Theme.fontFamilyHeading
@@ -76,7 +76,7 @@ Page {
                 }
                 Label {
                     id: minesLabel
-                    text: "Mine count: " + Math.round(mineCount.value)
+                    text: qsTr("Mine count: ") + Math.round(mineCount.value)
                     anchors.verticalCenter: parent.verticalCenter
                     color: palette.highlightColor
                     font.family: Theme.fontFamilyHeading
@@ -102,7 +102,7 @@ Page {
             // Apply configuration changes to game
             Button {
                 id: save
-                text: "Apply"
+                text: qsTr("Apply")
                 onClicked: rebuildGrid()
                 anchors.horizontalCenter: parent.horizontalCenter
             }
@@ -112,27 +112,27 @@ Page {
                 id: gameControls
                 width: parent.width
                 Label {
-                    text: "Controls preferences: "
+                    text: qsTr("Controls preferences: ")
                     color: palette.highlightColor
                     wrapMode: Text.Wrap
                     width: parent.width
                 }
                 TextSwitch {
                     id: controlSwitch1
-                    text: "Tap to reveal, hold to flag"
+                    text: qsTr("Tap to reveal, hold to flag")
                     checked: controlMode.value
                     onClicked: changeControls()
                 }
                 TextSwitch {
                     id: controlSwitch2
-                    text: "Tap to flag, hold to reveal"
+                    text: qsTr("Tap to flag, hold to reveal")
                     checked: !controlMode.value
                     onClicked: changeControls()
                 }
 
                 Label {
                     id: holdLabel
-                    text: "Hold duration: " + Math.round(holdSlider.value) + "ms"
+                    text: qsTr("Hold duration: ") + Math.round(holdSlider.value) + "ms"
                     anchors.horizontalCenter: parent.horizontalCenter
                     color: palette.highlightColor
                     font.family: Theme.fontFamilyHeading
@@ -153,14 +153,14 @@ Page {
                 id: gameHints
                 width: parent.width
                 Label {
-                    text: "Assists: "
+                    text: qsTr("Assists: ")
                     color: palette.highlightColor
                     wrapMode: Text.Wrap
                     width: parent.width
                 }
                 TextSwitch {
                     id: hintsSwitch
-                    text: "Dim cells when the correct number of flags surround them"
+                    text: qsTr("Dim cells when the correct number of flags surround them")
                     checked: mineHints.value
                     onClicked: {
                         var temp = !mineHints.value;
@@ -170,7 +170,7 @@ Page {
                 }
                 TextSwitch {
                     id: tapShieldSwitch
-                    text: "Prevent accidental presses of cells that do not have the correct number of flags surrounding them"
+                    text: qsTr("Prevent accidental presses of cells that do not have the correct number of flags surrounding them")
                     checked: tapShield.value
                     onClicked: {
                         var temp = !tapShield.value;
@@ -179,7 +179,7 @@ Page {
                 }
                 TextSwitch {
                     id: freeSpaceSwitch
-                    text: "Ensure there's always some free space around your first cell"
+                    text: qsTr("Ensure there's always some free space around your first cell")
                     checked: freeSpace.value
                     onClicked: {
                         var temp = !freeSpace.value;
@@ -193,7 +193,7 @@ Page {
             // Information
 
             Label {
-                text: "About: "
+                text: qsTr("About: ")
                 color: palette.highlightColor
                 wrapMode: Text.Wrap
                 width: parent.width
@@ -222,7 +222,7 @@ Page {
                     }
 
                     Label {
-                        text: "SailMines is open source software. You can find the licence details and source code on GitHub."
+                        text: qsTr("SailMines is open source software. You can find the licence details and source code on GitHub.")
                         anchors.horizontalCenter: parent.horizontalCenter
                         width: parent.width
                         wrapMode: Text.WordWrap
