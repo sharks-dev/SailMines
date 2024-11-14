@@ -8,7 +8,7 @@ CoverBackground {
         Image {
             id: iconImage
             anchors.horizontalCenter: parent.horizontalCenter
-            source: "../../../icons/hicolor/172x172/apps/SailMines.png"
+            source: "../../../icons/hicolor/172x172/apps/harbour-sailmines.png"
         }
         Label {
             id: label

@@ -1,12 +1,12 @@
 [Desktop Entry]
 Type=Application
 X-Nemo-Application-Type=silica-qt5
-Icon=SailMines
-Exec=SailMines
+Icon=harbour-sailmines
+Exec=harbour-sailmines
 Name=SailMines
 
 [X-Sailjail]
 OrganizationName=io.github.sharks-dev
-ApplicationName=SailMines
+ApplicationName=harbour-sailmines
 # Add the required permissions here
 Permissions=

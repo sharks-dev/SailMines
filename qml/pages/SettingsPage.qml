@@ -206,7 +206,7 @@ Page {
 
                 Image {
                     id: iconImage
-                    source: "../../../icons/hicolor/172x172/apps/SailMines.png"
+                    source: "../../../icons/hicolor/172x172/apps/harbour-sailmines.png"
                 }
 
                 Column {
@@ -231,7 +231,7 @@ Page {
 
                     Button {
                         text: qsTr("Open Github page")
-                        onClicked: Qt.openUrlExternally("https://github.com/sharks-dev/SailMines/");
+                        onClicked: Qt.openUrlExternally("https://github.com/sharks-dev/harbour-sailmines/");
                     }
                 }
             }

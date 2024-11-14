@@ -1,7 +1,7 @@
-Name:       SailMines
+Name:       harbour-sailmines
 
 Summary:    Minesweeper clone for SFOS
-Version:    0.7
+Version:    0.8
 Release:    1
 License:    LICENSE
 URL:        http://example.org/
@@ -12,6 +12,7 @@ BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  desktop-file-utils
+Obsoletes: SailMines
 
 %description
 Minesweeper clone for SFOS

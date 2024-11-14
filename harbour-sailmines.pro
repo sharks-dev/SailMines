@@ -10,19 +10,19 @@
 #   - translation filenames have to be changed
 
 # The name of your application
-TARGET = SailMines
+TARGET = harbour-sailmines
 
 CONFIG += sailfishapp
 
-SOURCES += src/SailMines.cpp
+SOURCES += src/harbour-sailmines.cpp
 
-DISTFILES += qml/SailMines.qml \
+DISTFILES += qml/harbour-sailmines.qml \
     qml/cover/CoverPage.qml \
     qml/pages/MinefieldPage.qml \
     qml/pages/SettingsPage.qml \
-    rpm/SailMines.changes \
-    rpm/SailMines.spec \
+    rpm/harbour-sailmines.changes \
+    rpm/harbour-sailmines.spec \
     translations/*.ts \
-    SailMines.desktop
+    harbour-sailmines.desktop
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
