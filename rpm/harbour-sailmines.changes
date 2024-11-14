@@ -15,7 +15,7 @@
 * Thu Nov 14 2024 Ash Sharkey <asharkey268@outlook.com> 0.8-1
 - The timer now pauses when the minefield is not on screen
 - Adding translation support
-- Changing application name from 'harbour-sailmines' to 'harbour-harbour-sailmines', as it should have been from the start.
+- Changing application name from 'Sailmines' to 'harbour-sailmines', as it should have been from the start.
 - Under the hood improvements
 
 * Sun Nov 10 2024 Ash Sharkey <asharkey268@outlook.com> 0.7-1
