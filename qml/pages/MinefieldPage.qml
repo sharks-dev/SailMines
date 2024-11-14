@@ -2,6 +2,8 @@ import QtQuick 2.0
 import QtFeedback 5.0
 import Sailfish.Silica 1.0
 
+// TODO: Code cleanup. eg. Get rid of `for` loops where they're not needed.
+
 Page {
     id: gamePage
 
@@ -37,7 +39,7 @@ Page {
         interval: 1000
         repeat: true
         onTriggered: {
-            updateTimer()
+            updateTimer();
         }
     }
 
@@ -170,7 +172,7 @@ Page {
     }
 
     function updateTimer() {
-        timerText.text = timerText.text*1 + 1;
+        if (gamePage.activeFocus) { timerText.text = timerText.text*1 + 1; }
     }
 
     function initialiseBoard() {

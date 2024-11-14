@@ -5,6 +5,11 @@ import Nemo.Configuration 1.0
 CoverBackground {
     Column {
         anchors.centerIn: parent
+        Image {
+            id: iconImage
+            anchors.horizontalCenter: parent.horizontalCenter
+            source: "../../../icons/hicolor/172x172/apps/SailMines.png"
+        }
         Label {
             id: label
             text: "SailMines"

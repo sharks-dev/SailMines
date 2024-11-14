@@ -192,14 +192,49 @@ Page {
 
             // Information
 
-            LinkedLabel {
-                plainText: "SailMines by Sharks. More information at https://github.com/sharks-dev/SailMines"
+            Label {
+                text: "About: "
+                color: palette.highlightColor
+                wrapMode: Text.Wrap
                 width: parent.width
-                wrapMode: Text.WordWrap
             }
 
+            Row {
 
+                width: parent.width
+                anchors.horizontalCenter: parent.horizontalCenter
 
+                Image {
+                    id: iconImage
+                    source: "../../../icons/hicolor/172x172/apps/SailMines.png"
+                }
+
+                Column {
+                    width: parent.width - iconImage.width
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    Label {
+                        text: "SailMines v0.8, © Sharks 2024."
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: parent.width
+                        wrapMode: Text.WordWrap
+                        leftPadding: 20
+                    }
+
+                    Label {
+                        text: "SailMines is open source software. You can find the licence details and source code on GitHub."
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: parent.width
+                        wrapMode: Text.WordWrap
+                        leftPadding: 20
+                    }
+
+                    Button {
+                        text: qsTr("Open Github page")
+                        onClicked: Qt.openUrlExternally("https://github.com/sharks-dev/SailMines/");
+                    }
+                }
+            }
         }
     }
 
